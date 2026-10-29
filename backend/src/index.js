@@ -1,0 +1,88 @@
+// backend/src/index.js
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+const connectDB = require('./config/db');
+
+const authRoutes = require('./routes/auth');
+const jobRoutes = require('./routes/jobs');
+const recruiterRoutes = require('./routes/recruiter');
+const adminRoutes = require('./routes/admin');
+const resumeRoutes = require('./routes/resume');
+const skillsRoutes = require('./routes/skills');
+const applicationsRoutes = require('./routes/applications');
+const studentRoutes = require('./routes/student');
+const roadmapRoutes = require('./routes/roadmap');
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// CORS configuration
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:5173',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+      return callback(null, true);
+    }
+    return callback(new Error('CORS not allowed from this origin'), false);
+  },
+  credentials: true,
+}));
+
+// Rate limiter & Body parsing
+const { generalLimiter } = require('./middleware/rateLimiter');
+app.use(generalLimiter);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Connect to DB (graceful if unset)
+connectDB();
+
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/student', studentRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/resume', resumeRoutes);
+app.use('/api/skills', skillsRoutes);
+app.use('/api/applications', applicationsRoutes);
+app.use('/api/recruiter', recruiterRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/roadmap', roadmapRoutes);
+
+// Health check
+app.get('/api/health', (req, res) => {
+  const dbStates = {
+    0: 'disconnected',
+    1: 'connected',
+    2: 'connecting',
+    3: 'disconnecting',
+  };
+  const isConnected = mongoose.connection.readyState === 1;
+
+  res.json({
+    status: 'ok',
+    service: 'Skill2Career API',
+    database: dbStates[mongoose.connection.readyState] || 'unknown',
+    databaseConnected: isConnected,
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+  });
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled server error:', err);
+  res.status(err.status || 500).json({
+    message: err.message || 'Internal server error',
+  });
+});
+
+app.listen(PORT, () => console.log(`🚀 Skill2Career backend running on port ${PORT}`));

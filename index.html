@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireSphere — Find Your Next Role</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- PDF.js for resume parsing -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <link rel="stylesheet" href="style.css?v=2">
+  <script src="script.js?v=2"></script>
+</head>
+<body>
+
+<!-- =============================================
+     NAVBAR
+============================================= -->
+<nav class="hs-navbar navbar navbar-expand-lg sticky-top" id="mainNav">
+  <div class="container">
+
+    <!-- Brand -->
+    <a class="navbar-brand hs-brand" href="#" onclick="showSection('home');return false;">
+      <i class="bi bi-hexagon-fill brand-hex"></i>Hire<span>Sphere</span>
+    </a>
+
+    <!-- Mobile toggler -->
+    <button class="navbar-toggler border-0 shadow-none" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navContent"
+            aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
+      <i class="bi bi-list fs-4"></i>
+    </button>
+
+    <!-- Nav links (role-based — rebuilt by JS after login) -->
+    <div class="collapse navbar-collapse" id="navContent">
+      <ul class="navbar-nav mx-auto gap-1" id="navLinks">
+        <li class="nav-item">
+          <a class="nav-link hs-nav-link active" href="#" data-section="home" onclick="showSection('home');return false;">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link hs-nav-link" href="#" data-section="jobs" onclick="showSection('jobs');return false;">Browse Jobs</a>
+        </li>
+      </ul>
+
+      <!-- Auth area — replaced by profile dropdown after login -->
+      <div class="d-flex gap-2 mt-3 mt-lg-0" id="navAuthButtons">
+        <button class="btn hs-btn-ghost" data-bs-toggle="modal" data-bs-target="#loginModal">Sign In</button>
+        <button class="btn hs-btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">Get Started</button>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- =============================================
+     PROFILE PANEL (fixed slide-in)
+============================================= -->
+<div id="profilePanel" class="profile-panel">
+  <button class="profile-panel-close" onclick="toggleProfile()" aria-label="Close">
+    <i class="bi bi-x-lg"></i>
+  </button>
+  <div class="profile-avatar-wrap">
+    <div class="profile-avatar" id="profileAvatarIcon">
+      <i class="bi bi-person-fill"></i>
+    </div>
+  </div>
+  <div class="profile-email" id="profileEmail">—</div>
+  <div class="profile-role-badge" id="profileRoleBadge">Job Seeker</div>
+  <hr class="profile-divider" />
+  <div class="profile-info-row">
+    <i class="bi bi-envelope"></i>
+    <span id="profileEmailDetail">—</span>
+  </div>
+  <div class="profile-info-row">
+    <i class="bi bi-shield-check"></i>
+    <span id="profileRoleDetail">Job Seeker</span>
+  </div>
+  <button class="btn hs-btn-ghost w-100 mt-4" onclick="logout()">
+    <i class="bi bi-box-arrow-right me-2"></i>Logout
+  </button>
+</div>
+
+<!-- Profile panel backdrop -->
+<div id="profileBackdrop" class="profile-backdrop" onclick="toggleProfile()"></div>
+
+
+<!-- =============================================
+     SECTION: HOME
+============================================= -->
+<section id="section-home" class="hs-section">
+
+  <!-- Hero -->
+  <div class="hero-wrapper">
+    <div class="hero-pattern"></div>
+    <div class="container hero-inner">
+      <div class="row justify-content-center text-center">
+        <div class="col-xl-8 col-lg-10">
+
+          <div class="hero-eyebrow">✦ 50,000+ active roles right now</div>
+
+          <h1 class="hero-title">
+            The smartest way to<br>
+            <em>land your next role</em>
+          </h1>
+
+          <p class="hero-sub">
+            Browse thousands of jobs from world-class companies.
+            Filter by skill, location, or type and apply in seconds.
+          </p>
+
+          <!-- Search box -->
+          <div class="hero-search-card">
+            <div class="row g-2 align-items-center">
+              <div class="col-md-5">
+                <div class="sinput-wrap">
+                  <i class="bi bi-search sinput-icon"></i>
+                  <input type="text" id="heroSkill" class="form-control hs-input"
+                         placeholder="Job title or skill…" />
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="sinput-wrap">
+                  <i class="bi bi-geo-alt sinput-icon"></i>
+                  <input type="text" id="heroLoc" class="form-control hs-input"
+                         placeholder="City or Remote…" />
+                </div>
+              </div>
+              <div class="col-md-3">
+                <button class="btn hs-btn-primary w-100 py-2" onclick="heroSearch()">
+                  Find Jobs <i class="bi bi-arrow-right ms-1"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trending tags -->
+          <div class="hero-tags">
+            <span class="tag-lbl">Trending:</span>
+            <button class="htag" onclick="quickSearch('React')">React</button>
+            <button class="htag" onclick="quickSearch('Python')">Python</button>
+            <button class="htag" onclick="quickSearch('Product')">Product</button>
+            <button class="htag" onclick="quickSearch('Remote')">Remote</button>
+            <button class="htag" onclick="quickSearch('Design')">Design</button>
+            <button class="htag" onclick="quickSearch('Data')">Data</button>
+          </div>
+
+          <!-- =============================================
+               AI RESUME UPLOAD
+          ============================================= -->
+          <div class="resume-ai-box" id="resumeAiBox">
+            <div class="resume-ai-header">
+              <i class="bi bi-robot resume-ai-icon"></i>
+              <h5 class="resume-ai-title">AI Resume Matcher</h5>
+              <p class="resume-ai-sub">Upload your resume and we'll suggest the best matching jobs</p>
+            </div>
+
+            <!-- Drop zone -->
+            <div class="resume-dropzone" id="resumeDropzone"
+                 onclick="document.getElementById('resumeFileInput').click()"
+                 ondragover="handleDragOver(event)"
+                 ondragleave="handleDragLeave(event)"
+                 ondrop="handleDrop(event)">
+              <input type="file" id="resumeFileInput" accept=".pdf" hidden onchange="analyzeResume(this.files[0])" />
+              <div class="dropzone-content" id="dropzoneContent">
+                <div class="dropzone-icon"><i class="bi bi-cloud-arrow-up-fill"></i></div>
+                <div class="dropzone-title">Drop your resume here</div>
+                <div class="dropzone-hint">PDF only · Click or drag to upload</div>
+              </div>
+            </div>
+
+            <!-- Progress / status -->
+            <div id="resumeStatus" class="resume-status" style="display:none"></div>
+
+            <!-- Detected skills badges -->
+            <div id="detectedSkillsWrap" style="display:none">
+              <div class="detected-label"><i class="bi bi-check-circle-fill me-1"></i>Skills detected:</div>
+              <div id="detectedSkillsList" class="detected-skills"></div>
+            </div>
+
+            <!-- Suggested jobs -->
+            <div id="suggestedJobsWrap" style="display:none">
+              <div class="suggested-label">Matching jobs for you</div>
+              <div id="suggestedJobs" class="suggested-jobs-grid"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="row g-0 text-center">
+        <div class="col-6 col-md-3"><div class="stat-item"><div class="stat-num">50K+</div><div class="stat-lbl">Active Jobs</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat-item"><div class="stat-num">8,200+</div><div class="stat-lbl">Companies</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat-item"><div class="stat-num">3.4M</div><div class="stat-lbl">Professionals</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat-item"><div class="stat-num">94%</div><div class="stat-lbl">Placement Rate</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categories -->
+  <div class="container sec-gap">
+    <div class="text-center mb-4">
+      <div class="sec-eyebrow">Browse by Category</div>
+      <h2 class="sec-title">Find roles you'll love</h2>
+    </div>
+    <div class="row g-3">
+      <div class="col-6 col-md-4 col-lg-2"><div class="cat-card" onclick="quickSearch('Engineering')"><div class="cat-ico" style="--cc:#2563EB;--cb:#EFF6FF">💻</div><div class="cat-name">Engineering</div><div class="cat-cnt">1,240 jobs</div></div></div>
+      <div class="col-6 col-md-4 col-lg-2"><div class="cat-card" onclick="quickSearch('Design')"><div class="cat-ico" style="--cc:#9333EA;--cb:#FDF4FF">🎨</div><div class="cat-name">Design</div><div class="cat-cnt">430 jobs</div></div></div>
+      <div class="col-6 col-md-4 col-lg-2"><div class="cat-card" onclick="quickSearch('Marketing')"><div class="cat-ico" style="--cc:#EA580C;--cb:#FFF7ED">📣</div><div class="cat-name">Marketing</div><div class="cat-cnt">680 jobs</div></div></div>
+      <div class="col-6 col-md-4 col-lg-2"><div class="cat-card" onclick="quickSearch('Data')"><div class="cat-ico" style="--cc:#16A34A;--cb:#F0FDF4">📊</div><div class="cat-name">Data Science</div><div class="cat-cnt">520 jobs</div></div></div>
+      <div class="col-6 col-md-4 col-lg-2"><div class="cat-card" onclick="quickSearch('Product')"><div class="cat-ico" style="--cc:#D97706;--cb:#FFFBEB">🚀</div><div class="cat-name">Product</div><div class="cat-cnt">310 jobs</div></div></div>
+      <div class="col-6 col-md-4 col-lg-2"><div class="cat-card" onclick="quickSearch('Finance')"><div class="cat-ico" style="--cc:#E11D48;--cb:#FFF1F2">💼</div><div class="cat-name">Finance</div><div class="cat-cnt">390 jobs</div></div></div>
+    </div>
+  </div>
+
+  <!-- Featured Jobs -->
+  <div class="featured-band">
+    <div class="container sec-gap">
+      <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+        <div><div class="sec-eyebrow">Hand-picked for you</div><h2 class="sec-title mb-0">Featured openings</h2></div>
+        <button class="btn hs-btn-ghost" onclick="showSection('jobs')">View all <i class="bi bi-arrow-right ms-1"></i></button>
+      </div>
+      <div id="featuredJobsGrid" class="row g-3"></div>
+    </div>
+  </div>
+
+  <!-- How It Works -->
+  <div class="container sec-gap">
+    <div class="text-center mb-4"><div class="sec-eyebrow">3-step process</div><h2 class="sec-title">How HireSphere works</h2></div>
+    <div class="row g-4">
+      <div class="col-md-4"><div class="how-card"><div class="how-num">01</div><h5 class="how-title">Create your profile</h5><p class="how-desc">Build a standout profile showcasing your skills and experience in minutes.</p></div></div>
+      <div class="col-md-4"><div class="how-card"><div class="how-num">02</div><h5 class="how-title">Discover &amp; filter</h5><p class="how-desc">Browse thousands of curated roles — filter by location, salary, and skills.</p></div></div>
+      <div class="col-md-4"><div class="how-card"><div class="how-num">03</div><h5 class="how-title">Apply &amp; get hired</h5><p class="how-desc">One-tap apply, track your applications in the Applied Jobs section.</p></div></div>
+    </div>
+  </div>
+
+  <!-- Testimonials -->
+  <div class="testi-band">
+    <div class="container sec-gap">
+      <div class="text-center mb-4"><div class="sec-eyebrow">Success stories</div><h2 class="sec-title">What our members say</h2></div>
+      <div class="row g-4">
+        <div class="col-md-4"><div class="testi-card"><div class="stars">★★★★★</div><p class="testi-q">"Found my dream role at a top startup in under two weeks. The filtering is incredibly powerful."</p><div class="testi-author"><div class="testi-av" style="background:#2563EB">SJ</div><div><div class="testi-name">Sarah J.</div><div class="testi-role">Frontend Dev · Stripe</div></div></div></div></div>
+        <div class="col-md-4"><div class="testi-card"><div class="stars">★★★★★</div><p class="testi-q">"As a recruiter, posting jobs and tracking applicants has never been smoother. Highly recommend."</p><div class="testi-author"><div class="testi-av" style="background:#9333EA">MK</div><div><div class="testi-name">Mike K.</div><div class="testi-role">Talent Lead · Notion</div></div></div></div></div>
+        <div class="col-md-4"><div class="testi-card"><div class="stars">★★★★☆</div><p class="testi-q">"The AI resume matcher instantly surfaced roles I hadn't even considered. Game changer."</p><div class="testi-author"><div class="testi-av" style="background:#16A34A">RP</div><div><div class="testi-name">Riya P.</div><div class="testi-role">Data Scientist · Airbnb</div></div></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="hs-footer">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4"><div class="footer-brand">HireSphere</div><p class="footer-desc">Connecting exceptional talent with world-class companies since 2025.</p></div>
+        <div class="col-6 col-lg-2"><div class="footer-hdg">Job Seekers</div><a href="#" class="footer-lnk" onclick="showSection('jobs');return false;">Browse Jobs</a><a href="#" class="footer-lnk">Upload CV</a><a href="#" class="footer-lnk">Salary Guide</a></div>
+        <div class="col-6 col-lg-2"><div class="footer-hdg">Employers</div><a href="#" class="footer-lnk" onclick="showSection('recruiter');return false;">Post a Job</a><a href="#" class="footer-lnk">Pricing</a></div>
+        <div class="col-6 col-lg-2"><div class="footer-hdg">Company</div><a href="#" class="footer-lnk">About</a><a href="#" class="footer-lnk">Blog</a><a href="#" class="footer-lnk">Careers</a></div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 HireSphere Inc. All rights reserved.</span>
+        <div class="footer-socials">
+          <a href="#"><i class="bi bi-twitter-x"></i></a>
+          <a href="#"><i class="bi bi-linkedin"></i></a>
+          <a href="#"><i class="bi bi-github"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</section><!-- /section-home -->
+
+
+<!-- =============================================
+     SECTION: BROWSE JOBS
+============================================= -->
+<section id="section-jobs" class="hs-section" style="display:none">
+  <div class="page-mini-hero">
+    <div class="container">
+      <h2 class="pmh-title">Browse Open Roles</h2>
+      <p class="pmh-sub">Filter by skill, location, or job type to find your perfect match.</p>
+    </div>
+  </div>
+  <div class="container py-5">
+    <div class="filter-bar">
+      <div class="row g-2 align-items-center">
+        <div class="col-12 col-md-4">
+          <div class="sinput-wrap">
+            <i class="bi bi-search sinput-icon"></i>
+            <input type="text" id="filterSkill" class="form-control hs-input"
+                   placeholder="Skill, title, keyword…" oninput="filterJobs()" />
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="sinput-wrap">
+            <i class="bi bi-geo-alt sinput-icon"></i>
+            <input type="text" id="filterLoc" class="form-control hs-input"
+                   placeholder="Location…" oninput="filterJobs()" />
+          </div>
+        </div>
+        <div class="col-6 col-md-2">
+          <select class="form-select hs-input" id="filterType" onchange="filterJobs()">
+            <option value="">All Types</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Contract">Contract</option>
+            <option value="Remote">Remote</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-3 d-flex gap-2">
+          <button class="btn hs-btn-primary flex-grow-1" onclick="filterJobs()">
+            <i class="bi bi-funnel me-1"></i>Filter
+          </button>
+          <button class="btn hs-btn-ghost" onclick="clearFilters()">
+            <i class="bi bi-x-circle me-1"></i>Clear
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center my-4 flex-wrap gap-2">
+      <div id="jobsResultText" class="results-text">Loading…</div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="sort-lbl">Sort:</span>
+        <select class="form-select form-select-sm hs-input" id="sortSelect"
+                onchange="filterJobs()" style="width:auto;min-width:130px">
+          <option value="default">Relevance</option>
+          <option value="newest">Newest First</option>
+          <option value="salary">Salary High→Low</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="jobsGrid" class="row g-3"></div>
+    <div id="jobsEmpty" class="empty-state" style="display:none">
+      <i class="bi bi-search fs-1 d-block mb-3 opacity-40"></i>
+      <h5>No jobs match your search</h5>
+      <p class="text-muted mb-3">Try different keywords or clear your filters.</p>
+      <button class="btn hs-btn-ghost" onclick="clearFilters()">Clear Filters</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- =============================================
+     SECTION: RECRUITER — POST JOB
+     (visible only to recruiters)
+============================================= -->
+<section id="section-recruiter" class="hs-section" style="display:none">
+  <div class="page-mini-hero">
+    <div class="container">
+      <h2 class="pmh-title">Post a Job</h2>
+      <p class="pmh-sub">Reach thousands of qualified candidates — your listing goes live instantly.</p>
+    </div>
+  </div>
+  <div class="container py-5">
+    <div class="row justify-content-center g-4">
+      <div class="col-lg-7">
+        <div class="hs-form-card">
+          <div class="hfc-header"><i class="bi bi-briefcase-fill me-2"></i>Job Details</div>
+          <div class="hfc-body">
+            <div class="row g-3">
+              <div class="col-md-6"><label class="form-label hs-label">Job Title <span class="req">*</span></label><input type="text" class="form-control hs-input" id="rTitle" placeholder="e.g. Senior React Developer" /></div>
+              <div class="col-md-6"><label class="form-label hs-label">Company <span class="req">*</span></label><input type="text" class="form-control hs-input" id="rCompany" placeholder="e.g. Acme Corp" /></div>
+              <div class="col-md-6"><label class="form-label hs-label">Location <span class="req">*</span></label><input type="text" class="form-control hs-input" id="rLocation" placeholder="e.g. New York or Remote" /></div>
+              <div class="col-md-6"><label class="form-label hs-label">Job Type</label><select class="form-select hs-input" id="rType"><option>Full-time</option><option>Part-time</option><option>Contract</option><option>Remote</option></select></div>
+              <div class="col-md-6"><label class="form-label hs-label">Salary Range</label><input type="text" class="form-control hs-input" id="rSalary" placeholder="e.g. $80k – $120k" /></div>
+              <div class="col-md-6"><label class="form-label hs-label">Logo Initials (1–2 chars)</label><input type="text" class="form-control hs-input" id="rLogo" maxlength="2" placeholder="e.g. AC" /></div>
+              <div class="col-12"><label class="form-label hs-label">Required Skills <span class="text-muted fw-normal small">(comma-separated)</span></label><input type="text" class="form-control hs-input" id="rSkills" placeholder="React, Node.js, TypeScript" /></div>
+              <div class="col-12"><label class="form-label hs-label">Job Description <span class="req">*</span></label><textarea class="form-control hs-input" id="rDesc" rows="4" placeholder="Describe the role, responsibilities, and requirements…"></textarea></div>
+            </div>
+            <div class="mt-4 d-flex gap-2">
+              <button class="btn hs-btn-primary" onclick="postJob()"><i class="bi bi-send me-1"></i>Post Job</button>
+              <button class="btn hs-btn-ghost" onclick="clearRecruiterForm()"><i class="bi bi-arrow-counterclockwise me-1"></i>Clear</button>
+            </div>
+            <div id="recruiterMsg" class="form-msg mt-3" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="tips-card">
+          <div class="tips-title"><i class="bi bi-lightbulb-fill me-2"></i>Tips for more applications</div>
+          <ul class="tips-list">
+            <li>Be specific about required skills and experience level</li>
+            <li>Listings with salary ranges get <strong>3× more applicants</strong></li>
+            <li>Use inclusive language to attract diverse candidates</li>
+            <li>Mention remote / hybrid options if available</li>
+          </ul>
+        </div>
+        <div class="tips-card mt-3">
+          <div class="tips-title"><i class="bi bi-bar-chart-fill me-2"></i>Platform stats</div>
+          <div class="ps-row"><span class="ps-num">2.4K</span><span class="ps-lbl">avg. views per listing</span></div>
+          <div class="ps-row"><span class="ps-num">68</span><span class="ps-lbl">avg. applications per role</span></div>
+          <div class="ps-row"><span class="ps-num">5 days</span><span class="ps-lbl">avg. time to first hire</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =============================================
+     SECTION: HIRE EMPLOYEE
+     (recruiters only)
+============================================= -->
+<section id="section-hire" class="hs-section" style="display:none">
+  <div class="page-mini-hero">
+    <div class="container">
+      <h2 class="pmh-title">Hire Employee</h2>
+      <p class="pmh-sub">Search for candidates by role and connect quickly.</p>
+    </div>
+  </div>
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="input-group mb-3">
+          <input id="hireSearchInput" type="text" class="form-control hs-input" placeholder="Search job role (Frontend Developer, Data Scientist, etc.)" />
+          <button class="btn hs-btn-primary" onclick="searchJobSeekers()">Search</button>
+        </div>
+        <div id="hireResults"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- =============================================
+     MODAL: LOGIN
+============================================= -->
+<div class="modal fade" id="loginModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content hs-modal">
+      <div class="modal-header hs-modal-hdr">
+        <div class="modal-brand">HireSphere</div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <h5 class="mf-title">Welcome back</h5>
+        <p class="mf-sub">Sign in to continue your job search.</p>
+
+        <!-- Role selector -->
+        <div class="role-toggle mb-4">
+          <button class="role-btn active" id="loginRoleSeeker" onclick="setLoginRole('seeker')">
+            <i class="bi bi-person me-1"></i>Job Seeker
+          </button>
+          <button class="role-btn" id="loginRoleRecruiter" onclick="setLoginRole('recruiter')">
+            <i class="bi bi-building me-1"></i>Recruiter
+          </button>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label hs-label">Email address</label>
+          <input type="email" class="form-control hs-input" id="loginEmail" placeholder="you@example.com" />
+        </div>
+        <div class="mb-4">
+          <label class="form-label hs-label d-flex justify-content-between">
+            Password <a href="#" class="forgot-lnk">Forgot?</a>
+          </label>
+          <div class="pw-wrap">
+            <input type="password" class="form-control hs-input" id="loginPass" placeholder="••••••••" />
+            <button class="pw-eye" type="button" onclick="togglePass('loginPass',this)">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button class="btn hs-btn-primary w-100 mb-3" onclick="handleLogin()">
+          Sign In <i class="bi bi-arrow-right ms-1"></i>
+        </button>
+        <div id="loginMsg" class="form-msg" style="display:none"></div>
+
+        <div class="or-div">or continue with</div>
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn hs-social-btn flex-grow-1" onclick="socialLogin('Google')">
+            <svg width="18" height="18" viewBox="0 0 24 24" class="me-2">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>Google
+          </button>
+          <button class="btn hs-social-btn flex-grow-1" onclick="socialLogin('LinkedIn')">
+            <i class="bi bi-linkedin me-2" style="color:#0A66C2"></i>LinkedIn
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer hs-modal-ftr">
+        Don't have an account?
+        <a href="#" class="modal-sw-lnk" data-bs-toggle="modal" data-bs-target="#registerModal">Create one free</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- =============================================
+     MODAL: REGISTER
+============================================= -->
+<div class="modal fade" id="registerModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content hs-modal">
+      <div class="modal-header hs-modal-hdr">
+        <div class="modal-brand">HireSphere</div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <h5 class="mf-title">Create your account</h5>
+        <p class="mf-sub">Join 3.4 million professionals on HireSphere.</p>
+
+        <div class="role-toggle mb-4">
+          <button class="role-btn active" id="regRoleSeeker" onclick="setRegRole('seeker')">
+            <i class="bi bi-person me-1"></i>Job Seeker
+          </button>
+          <button class="role-btn" id="regRoleRecruiter" onclick="setRegRole('recruiter')">
+            <i class="bi bi-building me-1"></i>Recruiter
+          </button>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6"><label class="form-label hs-label">First name</label><input type="text" class="form-control hs-input" id="regFirst" placeholder="First name" /></div>
+          <div class="col-6"><label class="form-label hs-label">Last name</label><input type="text" class="form-control hs-input" id="regLast" placeholder="Last name" /></div>
+        </div>
+        <div class="mb-3"><label class="form-label hs-label">Email</label><input type="email" class="form-control hs-input" id="regEmail" placeholder="you@example.com" /></div>
+        <div class="mb-3" id="regCompanyWrap" style="display:none"><label class="form-label hs-label">Company name</label><input type="text" class="form-control hs-input" id="regCompany" placeholder="Your company" /></div>
+        <div class="mb-3">
+          <label class="form-label hs-label">Password</label>
+          <div class="pw-wrap">
+            <input type="password" class="form-control hs-input" id="regPass"
+                   placeholder="Min. 8 characters" oninput="checkPassStrength(this.value)" />
+            <button class="pw-eye" type="button" onclick="togglePass('regPass',this)">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+          <div class="ps-bar mt-2"><div id="passStrengthFill" class="ps-fill" style="width:0%"></div></div>
+          <div id="passStrengthLabel" class="ps-lbl">Enter a password</div>
+        </div>
+        <div class="form-check mb-4">
+          <input class="form-check-input" type="checkbox" id="regTerms" />
+          <label class="form-check-label small" for="regTerms">
+            I agree to the <a href="#" class="modal-sw-lnk">Terms</a> and <a href="#" class="modal-sw-lnk">Privacy Policy</a>
+          </label>
+        </div>
+        <button class="btn hs-btn-primary w-100 mb-3" onclick="handleRegister()">
+          Create Account <i class="bi bi-arrow-right ms-1"></i>
+        </button>
+        <div id="registerMsg" class="form-msg" style="display:none"></div>
+      </div>
+      <div class="modal-footer hs-modal-ftr">
+        Already have an account?
+        <a href="#" class="modal-sw-lnk" data-bs-toggle="modal" data-bs-target="#loginModal">Sign in</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- =============================================
+     MODAL: APPLY
+============================================= -->
+<div class="modal fade" id="applyModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content hs-modal">
+      <div class="modal-header hs-modal-hdr">
+        <div class="modal-brand">Quick Apply</div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div id="applyJobInfo" class="apply-job-info mb-4"></div>
+        <div class="mb-3"><label class="form-label hs-label">Full Name <span class="req">*</span></label><input type="text" class="form-control hs-input" id="applyName" placeholder="Your full name" /></div>
+        <div class="mb-3"><label class="form-label hs-label">Email <span class="req">*</span></label><input type="email" class="form-control hs-input" id="applyEmail" placeholder="you@example.com" /></div>
+        <div class="mb-3"><label class="form-label hs-label">Phone</label><input type="tel" class="form-control hs-input" id="applyPhone" placeholder="+1 (555) 000-0000" /></div>
+        <div class="mb-3"><label class="form-label hs-label">LinkedIn / Portfolio</label><input type="url" class="form-control hs-input" id="applyLinkedin" placeholder="https://linkedin.com/in/…" /></div>
+        <div class="mb-3"><label class="form-label hs-label">Cover Note</label><textarea class="form-control hs-input" id="applyCover" rows="3" placeholder="Why are you a great fit?"></textarea></div>
+        <button class="btn hs-btn-primary w-100" onclick="submitApplication()">
+          Submit Application <i class="bi bi-send ms-1"></i>
+        </button>
+        <div id="applyMsg" class="form-msg mt-3" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Toast container -->
+<div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:9999"></div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- App JS -->
+<script src="script.js"></script>
+
+</body>
+</html>
