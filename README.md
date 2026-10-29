@@ -1,143 +1,397 @@
-# Skill2Career — AI-Powered Skill Gap Analysis & Career Opportunity Management Platform
 
-Skill2Career is a full-stack platform designed to bridge the gap between academic preparation and industry expectations. It enables students to analyze their skills against live job descriptions, receive AI-generated skill gap evaluations and personalized learning roadmaps, and connect directly with verified recruiters.
+# 🎯 Skill2Career
 
----
+### Learn, Grow, and Build Your Career
 
-## 🌟 Key Features
+**Skill2Career** is a full-stack career development platform designed to help students discover job opportunities, analyze their skills, explore learning roadmaps, and manage their career journey. It also provides functionality for recruiters and administrators.
 
-### 🎓 Student Features
-- **Interactive Landing Page**: Modern, responsive introduction with feature overviews and calls to action.
-- **Authentication & Role System**: Secure JWT-based registration and login with role-specific navigation.
-- **Student Dashboard**: Real-time profile completion score, application tracker, recommended opportunities, and quick action shortcuts.
-- **Student Profile & Skills**: Manage education, career objectives, technical skills with competency levels (`Beginner`, `Intermediate`, `Advanced`, `Expert`).
-- **Resume Management**: Secure multi-resume upload (PDF/DOCX, 5MB limit), set primary resume, stream download, and delete.
-- **Job Search & Filters**: Search opportunities by title, location, and employment type (`Full-time`, `Part-time`, `Contract`, `Remote`, `Internship`).
-- **Job Detail & 1-Click Apply**: View detailed responsibilities and competencies, attach selected resume, and include a personal pitch.
-- **AI Skill-Gap Analysis**: Evaluate skills against any job opening or custom job description. Displays quantitative match score (0–100%), matched badges, missing competencies, and actionable Google Gemini AI insights.
-- **Personalized Learning Roadmap**: Milestone checklist with progress tracking (`Not Started`, `In Progress`, `Completed`) and progress bar.
-- **My Applications**: Comprehensive tracking of submitted applications with status badges (`Applied`, `Screening`, `Interview`, `Selected`, `Rejected`, `Withdrawn`).
-
-### 🏢 Recruiter Features
-- **Recruiter Dashboard**: Overview of posted jobs, live vs. draft counts, and company account verification badge.
-- **Company Profile**: Manage company name, recruitment email, website, and organizational bio.
-- **Job Management**: Create, edit, publish, close, and delete job postings with required skills and salary ranges.
-- **Candidate Pipeline Tracker**: Inspect applicants per job, review cover notes, download student resumes, and transition candidate status (`Applied` → `Screening` → `Interview` → `Selected`).
-
-### 🛡️ Admin Features
-- **System Overview**: Summary metric cards for total users, students, recruiters, and job listings.
-- **User Management**: Inspect registered users with safe deletion and cascade cleanup.
-- **Recruiter Verification**: Verify or revoke recruiter credentials to ensure high trust.
-- **Job Moderation**: Inspect and remove invalid job postings across the platform.
-
-### ⚡ Resilient Demo Mode
-- If MongoDB or external AI services are not configured or temporarily unreachable, all pages automatically transition into a **clearly labeled Demo Mode** for UI inspection and preview. Actions that cannot be completed in demo mode are gracefully flagged.
+🌐 **Live Application:** [https://skill2careerr.netlify.app/](https://skill2careerr.netlify.app/)
 
 ---
 
-## 🚀 Running the Project Locally
+## 📌 Table of Contents
+
+- [Overview](#-overview)
+- [Features](#-features)
+- [Technology Stack](#️-technology-stack)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Environment Variables](#-environment-variables)
+- [Database Setup](#️-database-setup)
+- [Deployment](#-deployment)
+- [API Testing](#-api-testing)
+- [Troubleshooting](#-troubleshooting)
+- [Security](#-security)
+- [Future Improvements](#-future-improvements)
+
+---
+
+## 🚀 Overview
+
+Skill2Career aims to bridge the gap between students' skills and career opportunities by providing a centralized platform for career exploration and professional development.
+
+The platform brings together student profiles, job discovery, skill analysis, career roadmaps, and application tracking in one place.
+
+**Live Demo:** [Visit Skill2Career](https://skill2careerr.netlify.app/)
+
+## ✨ Features
+
+### 👨‍🎓 Student Features
+- Student registration and login.
+- Student profile management.
+- Browse and search job opportunities.
+- View job details and apply for suitable positions.
+- Track job applications.
+- Skill analysis and skill-gap identification.
+- Career development and learning roadmaps.
+
+### 🧑‍💼 Recruiter Features
+- Recruiter account and profile management.
+- Create and manage job listings.
+- View applicants for job postings.
+
+### 🛡️ Administrator Features
+- Admin dashboard.
+- Administrative views and management functionality.
+
+### 🤖 AI-Powered Career Support
+- Gemini API integration for supported AI features.
+- AI-assisted skill and career guidance.
+- Learning roadmap support.
+
+> **Note:** Feature availability depends on backend configuration, database contents, and the current implementation. Sample jobs displayed in demo mode may not be stored in MongoDB.
+
+## 🛠️ Technology Stack
+
+### Frontend
+- React.js
+- Vite
+- JavaScript
+- CSS
+- React Router
+- Axios
+
+### Backend
+- Node.js
+- Express.js
+- Mongoose
+- JSON Web Tokens (JWT)
+- REST API
+
+### Database
+- MongoDB Atlas
+
+### AI Integration
+- Google Gemini API
+- `@google/genai`
+
+### Deployment
+- Netlify — Frontend
+- Render — Backend
+- MongoDB Atlas — Database
+
+## 📁 Project Structure
+
+```text
+Skill2Career/
+├── backend/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── scripts/
+│   │   ├── services/
+│   │   └── index.js
+│   ├── package.json
+│   └── package-lock.json
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   └── App.jsx
+│   ├── package.json
+│   └── vite.config.js
+├── .env.example
+├── .gitignore
+├── netlify.toml
+├── render.yaml
+└── README.md
+```
+
+## 💻 Getting Started
 
 ### Prerequisites
-- Node.js (v18+ recommended)
-- npm (v9+)
-- (Optional) MongoDB Atlas database connection string
-- (Optional) Google Gemini API Key from Google AI Studio
 
-### Terminal 1 — Backend API Server
+Install the following tools before running the project locally:
+
+- [Node.js](https://nodejs.org/)
+- npm
+- [Git](https://git-scm.com/)
+- [MongoDB Atlas](https://www.mongodb.com/atlas)
+- Google AI Studio API key, if using Gemini-powered features.
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yasaswikodimela/Skill2Career.git
+cd Skill2Career
+```
+
+### 2. Install Backend Dependencies
+
 ```bash
 cd backend
 npm install
+```
+
+### 3. Configure Backend Environment Variables
+
+Create a `.env` file inside the `backend/` directory.
+
+```env
+PORT=5000
+NODE_ENV=development
+MONGODB_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_strong_random_secret
+FRONTEND_URL=http://localhost:5173
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+Replace the example values with your own credentials. Add other environment variables if your implementation requires them.
+
+**Never commit your actual `.env` file or expose API keys, passwords, or JWT secrets.**
+
+### 4. Start the Backend
+
+From the `backend/` directory:
+
+```bash
 node src/index.js
 ```
-The backend starts at: `http://localhost:5000`  
-Health check endpoint: `http://localhost:5000/api/health`
 
-### Terminal 2 — Frontend Application (Vite)
+If your `package.json` has a suitable start script, you can use:
+
+```bash
+npm start
+```
+
+The backend should run at:
+
+```text
+http://localhost:5000
+```
+
+### 5. Install Frontend Dependencies
+
+Open a second terminal at the project root:
+
 ```bash
 cd frontend
 npm install
-npm run dev
-```
-The frontend starts at: `http://localhost:5173`
-
----
-
-## 🌐 Available Routes & Navigation
-
-| Route | Role / Access | Purpose |
-|---|---|---|
-| `/` | Public | Platform Landing Page & Feature Showcase |
-| `/login` | Public | User Authentication with demo fill helpers |
-| `/register` | Public | Student & Recruiter Account Registration |
-| `/student/dashboard` | Student | Student Dashboard, Metrics & Recommendations |
-| `/student/profile` | Student | Profile, Competency Skills & Resume Manager |
-| `/student/jobs` | Student | Job Search, Multi-Filter & Gap Trigger |
-| `/student/jobs/:id` | Student | Job Details & Resume Attachment Submission |
-| `/student/analysis` | Student | AI Gap Analysis with Match Score & Gemini Insights |
-| `/student/roadmap` | Student | Milestones Checklist & Progress Tracker |
-| `/student/applications` | Student | Student Application Status Pipeline |
-| `/recruiter/dashboard` | Recruiter | Recruiter Workspace & Job Postings |
-| `/recruiter/profile` | Recruiter | Company Profile & Verification Status |
-| `/recruiter/jobs/:jobId/applicants` | Recruiter | Candidate Review & Status Progression |
-| `/admin/dashboard` | Admin | Administration Control Panel & Moderation |
-
----
-
-## ⚙️ Environment Variables
-
-### Backend Configuration (`backend/.env`)
-Copy `backend/.env.example` to `backend/.env`:
-```env
-PORT=5000
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/skill2career?retryWrites=true&w=majority
-JWT_SECRET=your_super_secret_jwt_key_at_least_32_characters
-GEMINI_API_KEY=your_gemini_api_key_from_google_ai_studio
-GEMINI_MODEL=gemini-2.0-flash
-FRONTEND_URL=http://localhost:5173
-NODE_ENV=development
 ```
 
-### Frontend Configuration (`frontend/.env`)
-Copy `frontend/.env.example` to `frontend/.env`:
+### 6. Configure the Frontend
+
+Create a `frontend/.env` file if your frontend uses `VITE_API_URL`.
+
 ```env
 VITE_API_URL=http://localhost:5000
 ```
 
----
+Check `frontend/src/api/api.js` to confirm whether the application appends `/api` to this base URL.
 
-## 🏗️ Production Build Verification
+### 7. Start the Frontend
 
-To verify that the frontend compiles cleanly for production:
+From the `frontend/` directory:
+
 ```bash
-cd frontend
-npm run build
+npm run dev
 ```
-Build output is saved to `frontend/dist/`.
+
+Open the local URL displayed by Vite, usually:
+
+```text
+http://localhost:5173
+```
+
+## 🔐 Environment Variables
+
+| Variable | Purpose |
+|---|---|
+| `PORT` | Backend server port |
+| `NODE_ENV` | Development or production environment |
+| `MONGODB_URI` | MongoDB Atlas connection string |
+| `JWT_SECRET` | Secret used for signing and verifying JWTs |
+| `FRONTEND_URL` | Allowed frontend origin for CORS |
+| `GEMINI_API_KEY` | API key for Gemini-powered features |
+
+Configure secrets through local environment files for development and the respective hosting dashboards for production.
+
+## 🗄️ Database Setup
+
+Skill2Career uses MongoDB Atlas for cloud database hosting.
+
+1. Create a MongoDB Atlas account and cluster.
+2. Create a database user with appropriate permissions.
+3. Configure network access for your backend hosting environment.
+4. Copy the Atlas connection string.
+5. Store it in `MONGODB_URI`.
+6. Restart the backend and verify the database connection.
+7. Create application data through supported application workflows or development seed scripts.
+
+Mongoose collections are generally created when documents are first inserted. Collection names and schemas are defined by the models in `backend/src/models/`.
+
+## 🌐 Deployment
+
+### Frontend — Netlify
+
+Live URL: [https://skill2careerr.netlify.app/](https://skill2careerr.netlify.app/)
+
+Recommended build configuration:
+
+| Setting | Value |
+|---|---|
+| Base directory | `frontend` |
+| Build command | `npm run build` |
+| Publish directory | `dist` |
+
+Configure the production API URL through Netlify environment variables:
+
+```env
+VITE_API_URL=https://your-render-service.onrender.com
+```
+
+Use the base URL format expected by `frontend/src/api/api.js`. Redeploy the frontend after changing build-time environment variables.
+
+### Backend — Render
+
+Backend URL: [https://skill2career-x135.onrender.com](https://skill2career-x135.onrender.com)
+
+Recommended configuration:
+
+| Setting | Value |
+|---|---|
+| Root directory | `backend` |
+| Build command | `npm install` |
+| Start command | `node src/index.js` |
+
+Configure the required environment variables in Render's dashboard, including `MONGODB_URI`, `JWT_SECRET`, `NODE_ENV`, `FRONTEND_URL`, and `GEMINI_API_KEY` if required.
+
+Set `FRONTEND_URL` to the deployed Netlify origin:
+
+```text
+https://skill2careerr.netlify.app
+```
+
+Ensure the Express CORS configuration uses this variable and allows the deployed frontend origin.
+
+### Database — MongoDB Atlas
+
+The deployed backend connects to MongoDB Atlas using `MONGODB_URI`. Verify that the database connection is active before testing registration, job creation, or application submission.
+
+## 🧪 API Testing
+
+### Check Backend Health
+
+Local:
+
+```powershell
+Invoke-RestMethod -Uri "http://localhost:5000/api/health"
+```
+
+Deployed:
+
+```text
+https://skill2career-x135.onrender.com/api/health
+```
+
+A healthy database connection should report `databaseConnected: true`.
+
+### Test the Jobs Endpoint
+
+Local:
+
+```powershell
+Invoke-RestMethod -Uri "http://localhost:5000/api/jobs"
+```
+
+Deployed:
+
+```text
+https://skill2career-x135.onrender.com/api/jobs
+```
+
+An empty array means the endpoint returned no matching job records. Check the database contents, job schema, and API filters if you expected jobs to appear.
+
+## 🐛 Troubleshooting
+
+### MongoDB Connection Error
+- Verify the Atlas connection string and database credentials.
+- Check Atlas Network Access settings.
+- Review the backend deployment logs.
+- Confirm that the deployed service can access the database.
+
+### Frontend Cannot Connect to Backend
+- Verify `VITE_API_URL`.
+- Redeploy after changing Netlify environment variables.
+- Check the browser Console and Network tabs.
+- Confirm that the backend CORS configuration allows the Netlify domain.
+
+### Jobs Show Demo Data
+- Check whether the jobs endpoint returns actual records.
+- Verify that jobs exist in MongoDB.
+- Review job status filters and the Mongoose Job model.
+- Remember that frontend fallback listings may be sample data.
+
+### Login or Registration Fails
+- Check backend logs and API responses.
+- Verify required environment variables.
+- Confirm MongoDB connectivity.
+- Review authentication and authorization routes.
+
+## 🔒 Security
+
+- Never commit `.env` files or real credentials.
+- Keep MongoDB credentials and API keys private.
+- Use a strong JWT secret in production.
+- Restrict database network access where possible.
+- Enforce authorization for protected routes.
+- Do not commit private resumes, uploaded documents, or user data.
+
+## 🔮 Future Improvements
+
+Potential improvements include:
+
+- More personalized AI career recommendations.
+- Advanced job matching based on student skills.
+- Improved recruiter analytics.
+- Additional learning resources and roadmap customization.
+- More comprehensive testing and monitoring.
+- Enhanced accessibility and mobile responsiveness.
+
+## 🤝 Contributing
+
+Contributions and suggestions are welcome.
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Implement and test your changes.
+4. Commit your changes.
+5. Open a pull request.
+
+## 📄 License
+
+No license has been specified yet. Add a license file if you intend to permit others to use, modify, or distribute this project.
 
 ---
 
-## 🚢 Deployment Guide
+### Skill2Career
 
-### Deploying the Frontend (Netlify)
-1. Link your repository to Netlify.
-2. In the Netlify build settings:
-   - **Base directory**: `frontend`
-   - **Build command**: `npm run build`
-   - **Publish directory**: `dist`
-3. Environment variables in Netlify:
-   - `VITE_API_URL`: Your deployed backend API URL (e.g., `https://skill2career-api.onrender.com`)
-4. The included `netlify.toml` and `frontend/public/_redirects` automatically route SPA requests to `/index.html`.
+**Learn, Grow, and Build Your Career.**
 
-### Deploying the Backend (Render / Railway)
-1. Create a **Web Service** pointing to the repository.
-2. Build & Start Settings:
-   - **Root directory**: `backend`
-   - **Build command**: `npm install`
-   - **Start command**: `node src/index.js`
-3. Configure Environment Variables:
-   - `PORT`: `5000` (or leave default for provider)
-   - `NODE_ENV`: `production`
-   - `MONGODB_URI`: MongoDB Atlas connection string (allow IP `0.0.0.0/0` in Atlas Network Access)
-   - `JWT_SECRET`: Random 32+ character string
-   - `GEMINI_API_KEY`: Google Gemini API key
-   - `FRONTEND_URL`: URL of your deployed frontend (e.g., `https://skill2career.netlify.app`)
+🌐 Live Application: [https://skill2careerr.netlify.app/](https://skill2careerr.netlify.app/)
