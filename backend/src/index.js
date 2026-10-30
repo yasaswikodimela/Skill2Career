@@ -17,6 +17,13 @@ const roadmapRoutes = require('./routes/roadmap');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Skill2Career API routes are responding',
+    version: '2026-10-30'
+  });
+});
 app.get('/debug', (req, res) => {
   res.json({
     message: 'Correct Skill2Career backend is running',
@@ -64,24 +71,6 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/roadmap', roadmapRoutes);
 
 // Health check
-app.get('/api/health', (req, res) => {
-  const dbStates = {
-    0: 'disconnected',
-    1: 'connected',
-    2: 'connecting',
-    3: 'disconnecting',
-  };
-  const isConnected = mongoose.connection.readyState === 1;
-
-  res.json({
-    status: 'ok',
-    service: 'Skill2Career API',
-    database: dbStates[mongoose.connection.readyState] || 'unknown',
-    databaseConnected: isConnected,
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
-  });
-});
 
 // Global error handler
 app.use((err, req, res, next) => {
