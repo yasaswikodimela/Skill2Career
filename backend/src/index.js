@@ -1,4 +1,4 @@
-// backend/src/index.js
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -17,23 +17,8 @@ const roadmapRoutes = require('./routes/roadmap');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    message: 'Skill2Career API routes are responding',
-    version: '2026-10-30'
-  });
-});
-app.get('/debug', (req, res) => {
-  res.json({
-    message: 'Correct Skill2Career backend is running',
-    version: 'debug-2026-10-30'
-  });
-});
 
-// CORS configuration
-
-// CORS configuration
+// CORS MUST BE FIRST
 const corsOptions = {
   origin: [
     'https://skill2careerr.netlify.app',
@@ -47,17 +32,29 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+// Diagnostic routes
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Skill2Career API is running',
+    databaseConnected: mongoose.connection.readyState === 1,
+  });
+});
 
-// Rate limiter & Body parsing
+app.get('/debug', (req, res) => {
+  res.json({ message: 'Skill2Career backend is running' });
+});
+
+// Middleware
 const { generalLimiter } = require('./middleware/rateLimiter');
 app.use(generalLimiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect to DB (graceful if unset)
+// Database
 connectDB();
 
-// API Routes
+// API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/student', studentRoutes);
 app.use('/api/jobs', jobRoutes);
@@ -68,9 +65,7 @@ app.use('/api/recruiter', recruiterRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/roadmap', roadmapRoutes);
 
-// Health check
-
-// Global error handler
+// Error handler
 app.use((err, req, res, next) => {
   console.error('Unhandled server error:', err);
   res.status(err.status || 500).json({
@@ -78,4 +73,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => console.log(`🚀 Skill2Career backend running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Skill2Career backend running on port ${PORT}`);
+});
