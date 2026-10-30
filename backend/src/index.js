@@ -33,20 +33,17 @@ app.get('/debug', (req, res) => {
 
 // CORS configuration
 const allowedOrigins = [
-  process.env.FRONTEND_URL,
   'https://skill2careerr.netlify.app',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
-].filter(Boolean);
+];
 
 app.use(cors({
   origin: (origin, callback) => {
-    // allow requests with no origin (like mobile apps, curl, Postman)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || process.env.NODE_ENV !== 'production') {
+    if (!origin || allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
-    return callback(new Error('CORS not allowed from this origin'), false);
+    return callback(new Error(`CORS blocked: ${origin}`));
   },
   credentials: true,
 }));
