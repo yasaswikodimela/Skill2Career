@@ -17,6 +17,12 @@ const roadmapRoutes = require('./routes/roadmap');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.get('/debug', (req, res) => {
+  res.json({
+    message: 'Correct Skill2Career backend is running',
+    version: 'debug-2026-10-30'
+  });
+});
 
 // CORS configuration
 const allowedOrigins = [
